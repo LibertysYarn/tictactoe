@@ -1,34 +1,88 @@
-var user = ['O', 'X'];
+var pieces = ['O', 'X'];
+var player;
+var ai;
 var $bigBtn = $('.big-btn');
+var $xWin = $('.scoreX');
+var $oWin = $('.scoreO');
 var $alert = $('#alert-box');
-var $;
+var $clearAll = $('#clearAll');
+var $primary = $('.X-primary');
 var board = [];
 var turn = 0;
-var playerWins = 0;
-var aiWins = 0;
+var xWins = 0;
+var oWins = 0;
 
-$('#clearAll').on('click', function () {
+$clearAll.on('click', function () {
 	$bigBtn.text('');
 	$bigBtn.button('reset');
+	turn = 0;
+	board = [];
+	createBoard();
 });
 
-$('#optionX').on('click', function () {
-	user.sort().reverse();
-});
-
-$('#optionO').on('click', function () {
-	user.sort();
+$primary.on('click', function () {
+	player = this.id;
+	ai = player === 'X' ? 'O' : 'X';
+  $alert.text(player + ' goes first!');
 });
 
 $bigBtn.on('click', function () {
 	var $btn = $(this).button();
-	$btn.text(user[0]);
+	$btn.text(player);
+	turn === 0 ? createBoard() : 0;
+	play(this.id);
 	turn++;
-	console.log(turn);
 });
 
-// TODO mark space as used ? remove it from a list of options
+function createBoard() {
+	for (var i = 0; i <= 8; i++) {
+		board.push(i);
+	}
+}
+
+function play (id) {
+	// mark space as filled
+	var i = board.indexOf(id - 1);
+	board[i] = player;
+	checkWinner();
+}
+
 // TODO call machine to take turn
+
+function checkWinner () {
+	// check rows
+	for (var i = 0; i <= 6; i = i + 3) {
+		if (board[0] === player && board[i + 1] === player && board[i + 2] === player) {
+			winScore(player);
+		}
+
+		// check columns
+		for (var i = 0; i <= 2; i++) {
+			if (board[i] === board[i + 3] && board[i + 3] === board[i + 6]) {
+				winScore(player);
+			}
+		}
+
+		// check diagonals
+		for (var i = 0, j = 4; i <= 2; i = i + 2, j = j - 2) {
+			if (board[i] === board[i + j] && board[i + j] === board[i + 2 * j]) {
+				winScore(player);
+			}
+		}
+	}
+}
+
 // TODO stop when all spaces used
-// TODO function for machine to take turn
 // TODO first turn can go in any available space
+
+function winScore(player) {
+	if (player === 'X') {
+		xWins++;
+		$alert.text('X Wins!');
+		$xWin.text(xWins);
+	} else if (player === 'O') {
+		oWins++;
+		$alert.text('O Wins!');
+		$oWin.text(oWins);
+	}
+}

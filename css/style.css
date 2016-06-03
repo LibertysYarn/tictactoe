@@ -61,3 +61,7 @@ body {
   height : 155px;
   vertical-align : middle;
 }
+
+.wintext {
+  font-size: .75em;
+}
