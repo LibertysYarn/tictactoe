@@ -1,48 +1,63 @@
-body { font-family: 'Lekton', sans-serif;}
+body {
+  font-family : 'Lekton', sans-serif;
+}
 
 .navbar .container {
-  padding: 0 45px;
+  padding : 0 45px;
 }
+
 .pad-top {
-  padding-top: 80px;
+  padding-top : 80px;
 }
+
 .X-group {
-  padding: 5px;
-  margin-left: 45px;
+  margin-left : 45px;
+  padding : 5px;
 }
+
 .X-primary {
-  font-size:18px
+  font-size : 18px;
 }
+
 .big-btn,
 .big-btn:active,
 .big-btn:focus,
 .big-btn:visited {
-  background-color: rgba(3,3,3,0);
-  width: 150px;
-  height: 150px;
-  padding-left: 0;
-  padding-right: 0;
-  font-size: 115px;
-  color: #FFF;
-  border: 1px solid #e5e5e5;
+  padding-right : 0;
+  padding-left : 0;
+  width : 150px;
+  height : 150px;
+  border : 1px solid #e5e5e5;
+  background-color : rgba(3, 3, 3, 0);
+  color : #ffffff;
+  font-size : 115px;
 }
+
 .big-btn:hover {
-  background-color: rgba(3,3,3,0.1)
-  border: 1px solid #e5e5e5;
+  border : 1px solid #e5e5e5;
+  background-color : rgba(3, 3, 3, 0.1);
 }
+
 .X-brand {
-  font-size: 32px;
-  padding: 17px 15px 15px 0;
-  font-weight: 700
+  padding : 17px 15px 15px 0;
+  font-weight : 700;
+  font-size : 32px;
 }
-.nav>li {
-  padding: 10px 10px 10px 0;
-  font-size: 20px;
+
+.nav > li {
+  padding : 10px 10px 10px 0;
+  font-size : 20px;
 }
-.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
-  vertical-align: middle;
-  height: 155px;
-  width: 155px;
-  padding-left: 0;
-  padding-right: 0;
+
+.table > tbody > tr > td,
+.table > tbody > tr > th,
+.table > tfoot > tr > td,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > thead > tr > th {
+  padding-right : 0;
+  padding-left : 0;
+  width : 155px;
+  height : 155px;
+  vertical-align : middle;
 }
