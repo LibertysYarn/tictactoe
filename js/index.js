@@ -1,17 +1,19 @@
-// #Done:10 fix alert logic so messages make sense
-// #Done:50 stop game when all spaces used and declare a draw
+// #Done:20 fix alert logic so messages make sense
+// #Done:60 stop game when all spaces used and declare a draw
 // TODO:0 don't allow one player to take two turns in a succession
 // TODO:20 first turn can go in any available space
-// #Done:40 add a pause after reset
+// #Done:50 add a pause after reset
 // #Done:0 force player to choose a piece
 // TODO:30 make it so X always goes first, initiates ai if needed
-// #Doing:0 set number of players 0-2
-// #Done:30 keep player from using occupied space
+// #Done:10 set number of players 0-2
+// #Done:40 keep player from using occupied space
 // IDEA:10 create an array of encouraging/snarky alerts for during play
 // IDEA:20 add Josua soundclip on page load
 // TODO:10 call machine to take turn
-// #Done:20 refine player definition for winner check
+// #Done:30 refine player definition for winner check
+// TODO ai rules for different number of players
 
+/* Initiate all the variables!!! */
 var pieces = ['O', 'X'];
 var player;
 var ai;
@@ -36,7 +38,6 @@ var reset = function () {
 	turn = 0;
 	board = [];
 	winner = false;
-	// player = undefined;
 	$alert.text(' ');
 };
 
