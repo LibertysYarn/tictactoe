@@ -15,6 +15,7 @@ body {
   padding : 5px;
 }
 
+.playerNumber,
 .X-primary {
   font-size : 18px;
 }

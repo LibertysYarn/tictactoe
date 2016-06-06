@@ -23,6 +23,7 @@ var $oWin = $('.scoreO');
 var $alert = $('#alert-box');
 var $clearAll = $('#clearAll');
 var $primary = $('.X-primary');
+var $playerNumber = $('.playerNumber');
 var board = [];
 var turn = 0;
 var xWins = 0;
@@ -41,6 +42,9 @@ var reset = function () {
 
 // clears all fields and arrays on reset button click
 $clearAll.on('click', reset);
+$playerNumber.on('click', function (){
+	numberOfPlayers = this.id;
+});
 
 // user to choose player piece
 $primary.on('click', function () {
