@@ -1,17 +1,17 @@
 // #Done:20 fix alert logic so messages make sense
 // #Done:60 stop game when all spaces used and declare a draw
-// TODO:0 don't allow one player to take two turns in a succession
-// TODO:20 first turn can go in any available space
+// #Doing:0 don't allow one player to take two turns in a succession
+// TODO:10 first turn can go in any available space
 // #Done:50 add a pause after reset
 // #Done:0 force player to choose a piece
-// TODO:30 make it so X always goes first, initiates ai if needed
+// TODO:20 make it so X always goes first, initiates ai if needed
 // #Done:10 set number of players 0-2
 // #Done:40 keep player from using occupied space
 // IDEA:10 create an array of encouraging/snarky alerts for during play
 // IDEA:20 add Josua soundclip on page load
-// TODO:10 call machine to take turn
+// #Doing:10 call machine to take turn
 // #Done:30 refine player definition for winner check
-// TODO ai rules for different number of players
+// TODO:0 ai rules for different number of players
 
 /* Initiate all the variables!!! */
 var pieces = ['O', 'X'];
@@ -27,9 +27,30 @@ var $clearAll = $('#clearAll');
 var $primary = $('.X-primary');
 var $playerNumber = $('.playerNumber');
 var board = [];
+var randomCell;
 var turn = 0;
 var xWins = 0;
 var oWins = 0;
+
+/*
+// create an array for the board [0...8] */
+function createBoard () {
+	board = Array(10).join('E').split('');
+}
+
+/*
+// create array of available spaces on the board [E...E] */
+function available () {
+	var empty = [];
+	if (empty.length === 0) {
+		for (var i = 0; i < 9; i++) {
+			if (this.board[i] === 'E') {
+				empty.push(i);
+			}
+		}
+	}
+	return empty;
+}
 
 // clears all text, values, and fields
 var reset = function () {
@@ -43,7 +64,9 @@ var reset = function () {
 
 // clears all fields and arrays on reset button click
 $clearAll.on('click', reset);
-$playerNumber.on('click', function (){
+
+// declares number of players
+$playerNumber.on('click', function () {
 	numberOfPlayers = this.id;
 });
 
@@ -59,74 +82,62 @@ $primary.on('click', function () {
 /*
 // when clicking on the board and mark with player piece */
 $bigBtn.on('click', function () {
-	var $btn = $(this).button();
-	$btn.text(player);
-
 	// test if piece is defined
 	if (player === undefined) {
 		$alert.text('You must choose a side');
 	}
 
 	// print alert message
-	if (winner == false) {
+	if (winner === false) {
 		$alert.text('nice move ' + player);
 	}
 
 	// call to create the board
-	turn == 0 ? createBoard() : 0;
+	turn === 0 ? createBoard() : 0;
+
+	var $btn = $(this).button();
+	var playerId = this.id;
+	// $btn.text(player);
 
 	// call to start play
-	play(this.id);
+	play(playerId, player);
 
 	// incriment the turn number
 	turn++;
-	console.log(board);
+
+	// call ai to take a turn
+	aiTurn();
+
+	console.log('current board: ' + board);
 });
 
 /*
-// create an array for the board [0...8] */
-function createBoard() {
-	board = Array(10).join('E').split('');
-}
-
-/*
-// create array of available spaces on the board [E...E] */
-function available() {
-	var empty = [];
-	for (var i = 0; i < 9; i++) {
-		if (this.board[i] === 'E') {
-			empty.push(i);
-		}
-	}
-	console.log(empty);
-	return empty;
-}
-
-/*
 // checks rule and calls to checks for winner */
-function play(id) {
+function play (id, piece) {
 	// test space availability
-	if (board[id - 1] == 'E') {
+	if (board[id] === 'E') {
+		board[id] = piece;
+		console.log(board[id]);
 		// assigns player piece to board index matching space location id
-		board[id - 1] = player;
+		var $btn = $('#' + id).button();
+		$btn.text(piece);
 		checkWinner();
-	} else {
-		// forces piece at that index to remain in space and alerts player
-		$('#'+id).text(board[id-1]);
-		$alert.text('that space is taken');
 	}
-	console.log(turn);
 }
 
 /*
 // */
-function aiTurn() {
-
+function aiTurn () {
+	var ran = this.available();
+	var len = ran.length;
+	randomCell = ran[Math.floor(Math.random() * len)];
+	play(randomCell, ai);
+	// $alert.text(ai + ' is catching up');
 }
 
 /*
-// */
-function checkWinner() {
+// pretty self-explanitory - checking for winning patterns*/
+function checkWinner () {
 	// check rows
 	for (var i = 0; i <= 6; i = i + 3) {
 		if (board[i] !== 'E' && board[i] === board[i + 1] && board[i] === board[i + 2]) {
@@ -152,8 +163,8 @@ function checkWinner() {
 		}
 	}
 	// check for a draw
-	var empty = available();
-	if (empty.length === 0 && winner !== true) {
+	var open = available();
+	if (open.length === 0 && winner !== true) {
 		$alert.text("It's a draw");
 	} else {
 		winner = false;
@@ -162,16 +173,16 @@ function checkWinner() {
 
 /*
 // incriment the score to winning player and reset the board */
-function winScore(player) {
-	if (player === 'X') {
+function winScore (piece) {
+	if (piece === 'X') {
 		xWins++;
 		$xWin.text(xWins);
-		$alert.text(player + ' Wins!');
+		$alert.text(piece + ' Wins!');
 		setTimeout(reset, 3000);
-	} else if (player === 'O') {
+	} else if (piece === 'O') {
 		oWins++;
 		$oWin.text(oWins);
-		$alert.text(player + ' Wins!');
+		$alert.text(piece + ' Wins!');
 		setTimeout(reset, 2000);
 	}
 }
