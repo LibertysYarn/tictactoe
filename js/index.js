@@ -34,13 +34,13 @@ var oWins = 0;
 
 /*
 // create an array for the board [0...8] */
-function createBoard () {
+function createBoard() {
 	board = Array(10).join('E').split('');
 }
 
 /*
 // create array of available spaces on the board [E...E] */
-function available () {
+function available() {
 	var empty = [];
 	if (empty.length === 0) {
 		for (var i = 0; i < 9; i++) {
@@ -101,33 +101,38 @@ $bigBtn.on('click', function () {
 
 	// call to start play
 	play(playerId, player);
+	console.log(winner);
 
 	// incriment the turn number
 	turn++;
 
 	// call ai to take a turn
 	aiTurn();
+	console.log(winner);
 
 	console.log('current board: ' + board);
 });
 
 /*
 // checks rule and calls to checks for winner */
-function play (id, piece) {
-	// test space availability
-	if (board[id] === 'E') {
-		board[id] = piece;
-		console.log(board[id]);
-		// assigns player piece to board index matching space location id
-		var $btn = $('#' + id).button();
-		$btn.text(piece);
-		checkWinner();
+function play(id, piece) {
+
+		// test space availability
+		if (board[id] === 'E') {
+			board[id] = piece;
+			console.log(board[id]);
+			// assigns player piece to board index matching space location id
+			var $btn = $('#' + id).button();
+			$btn.text(piece);
+			checkWinner();
+		}
 	}
-}
+
 
 /*
 // */
-function aiTurn () {
+function aiTurn() {
+	// make a random move
 	var ran = this.available();
 	var len = ran.length;
 	randomCell = ran[Math.floor(Math.random() * len)];
@@ -135,20 +140,113 @@ function aiTurn () {
 	// $alert.text(ai + ' is catching up');
 }
 
+// TODO use minimax to make a strategic move
+
+// setMinMaxPlayers = function (maxPlayer, minPlayer) {
+// 	this.minPlayer = player;
+// 	this.maxPlayer = ai;
+// };
+//
+// cloneBoard = function (board) {
+// 	return board.slice(0);
+// };
+//
+// findMove = function (board) {
+// 	var bestMoveValue, i, move, newBoard, predictedMoveValue;
+// 	bestMoveValue = -100;
+// 	move = 0;
+// 	i = 0;
+// 	while (i < board.length) {
+// 		newBoard = this.makeMove(i, this.maxPlayer, board);
+// 		if (newBoard) {
+// 			predictedMoveValue = this.minValue(newBoard);
+// 			if (predictedMoveValue > bestMoveValue) {
+// 				bestMoveValue = predictedMoveValue;
+// 				move = i;
+// 			}
+// 		}
+// 		i++;
+// 	}
+// 	return move;
+// };
+//
+// makeMove = function (move, player, board) {
+// 	var newBoard;
+// 	newBoard = this.cloneBoard(board);
+// 	if (newBoard[move] === 0) {
+// 		newBoard[move] = player;
+// 		return newBoard;
+// 	} else {
+// 		return null;
+// 	}
+// };
+//
+// minValue = function (board) {
+// 	var bestMoveValue, i, move, newBoard, predictedMoveValue;
+// 	if (this.checkWinner(this.maxPlayer, board)) {
+// 		return 1;
+// 	} else if (this.checkWinner(this.minPlayer, board)) {
+// 		return -1;
+// 	} else if (this.checkWinner(board) === 'draw') {
+// 		return 0;
+// 	} else {
+// 		bestMoveValue = 100;
+// 		move = 0;
+// 		while (i = 0; i < board.length; i++) {
+// 			newBoard = this.makeMove(i, this.minPlayer, board);
+// 			if (newBoard) {
+// 				predictedMoveValue = this.maxValue(newBoard);
+// 				if (predictedMoveValue < bestMoveValue) {
+// 					bestMoveValue = predictedMoveValue;
+// 					move = i;
+// 				}
+// 			}
+// 		}
+// 		return bestMoveValue;
+// 	}
+// };
+//
+// maxValue = function (board) {
+// 	var bestMoveValue, i, move, newBoard, predictedMoveValue;
+// 	if (this.checkWinner(this.maxPlayer, board)) {
+// 		return 1;
+// 	} else if (this.checkWinner(this.minPlayer, board)) {
+// 		return -1;
+// 	} else if (this.checkWinner(board) === 'draw') {
+// 		return 0;
+// 	} else {
+// 		bestMoveValue = -100;
+// 		move = 0;
+// 		for (i = 0; i < board.length; i++) {
+// 			newBoard = this.makeMove(i, this.maxPlayer, board);
+// 			if (newBoard) {
+// 				predictedMoveValue = this.minValue(newBoard);
+// 				if (predictedMoveValue > bestMoveValue) {
+// 					bestMoveValue = predictedMoveValue;
+// 					move = i;
+// 				}
+// 			}
+// 		}
+// 		return bestMoveValue;
+// 	}
+// };
+
+
 /*
 // pretty self-explanitory - checking for winning patterns*/
-function checkWinner () {
+function checkWinner() {
 	// check rows
 	for (var i = 0; i <= 6; i = i + 3) {
 		if (board[i] !== 'E' && board[i] === board[i + 1] && board[i] === board[i + 2]) {
 			winner = true;
+			console.log(board[i] + ' winning row');
 			winScore(board[i]);
 		}
 	}
 	// check columns
 	for (var i = 0; i <= 2; i++) {
 		if (board[i] !== 'E' && board[i] === board[i + 3] && board[i + 3] === board[i + 6]) {
-			console.log('winning column');
+			console.log(board[i] + ' winning column');
 			winner = true;
 			winScore(board[i]);
 		}
@@ -157,7 +255,7 @@ function checkWinner () {
 	// check diagonals
 	for (var i = 0, j = 4; i <= 2; i = i + 2, j = j - 2) {
 		if (board[i] !== 'E' && board[i] == board[i + j] && board[i + j] === board[i + 2 * j]) {
-			console.log('winning diagonals');
+			console.log(board[i] + ' winning diagonals');
 			winner = true;
 			winScore(board[i]);
 		}
@@ -173,13 +271,13 @@ function checkWinner () {
 
 /*
 // incriment the score to winning player and reset the board */
-function winScore (piece) {
+function winScore(piece) {
 	if (piece === 'X') {
 		xWins++;
 		$xWin.text(xWins);
 		$alert.text(piece + ' Wins!');
 		setTimeout(reset, 3000);
-	} else if (piece === 'O') {
+	} else {
 		oWins++;
 		$oWin.text(oWins);
 		$alert.text(piece + ' Wins!');
