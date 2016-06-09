@@ -102,12 +102,13 @@ $bigBtn.on('click', function () {
 	// call to start play
 	play(playerId, player);
 	console.log(winner);
-
+	checkWinner();
 	// incriment the turn number
 	turn++;
 
 	// call ai to take a turn
 	aiTurn();
+
 	console.log(winner);
 
 	console.log('current board: ' + board);
@@ -117,119 +118,123 @@ $bigBtn.on('click', function () {
 // checks rule and calls to checks for winner */
 function play(id, piece) {
 
-		// test space availability
-		if (board[id] === 'E') {
-			board[id] = piece;
-			console.log(board[id]);
-			// assigns player piece to board index matching space location id
-			var $btn = $('#' + id).button();
-			$btn.text(piece);
-			checkWinner();
-		}
+	// test space availability
+	if (board[id] === 'E') {
+		board[id] = piece;
+		console.log(board[id]);
+		// assigns player piece to board index matching space location id
+		var $btn = $('#' + id).button();
+		$btn.text(piece);
+
 	}
+}
 
 
 /*
 // */
 function aiTurn() {
 	// make a random move
-	var ran = this.available();
-	var len = ran.length;
-	randomCell = ran[Math.floor(Math.random() * len)];
+	var openSquares = this.available();
+	len = openSquares.length;
+	randomCell = openSquares[Math.floor(Math.random() * len)];
 	play(randomCell, ai);
 	// $alert.text(ai + ' is catching up');
+
+	// FIX Minimax move
+	// var nextMove = findMove(openSquares);
+	// play(nextMove, ai);
+	// console.log(nextMove);
+	checkWinner();
 }
 
 // TODO use minimax to make a strategic move
 
-// setMinMaxPlayers = function (maxPlayer, minPlayer) {
-// 	this.minPlayer = player;
-// 	this.maxPlayer = ai;
-// };
-//
-// cloneBoard = function (board) {
-// 	return board.slice(0);
-// };
-//
-// findMove = function (board) {
-// 	var bestMoveValue, i, move, newBoard, predictedMoveValue;
-// 	bestMoveValue = -100;
-// 	move = 0;
-// 	i = 0;
-// 	while (i < board.length) {
-// 		newBoard = this.makeMove(i, this.maxPlayer, board);
-// 		if (newBoard) {
-// 			predictedMoveValue = this.minValue(newBoard);
-// 			if (predictedMoveValue > bestMoveValue) {
-// 				bestMoveValue = predictedMoveValue;
-// 				move = i;
-// 			}
-// 		}
-// 		i++;
-// 	}
-// 	return move;
-// };
-//
-// makeMove = function (move, player, board) {
-// 	var newBoard;
-// 	newBoard = this.cloneBoard(board);
-// 	if (newBoard[move] === 0) {
-// 		newBoard[move] = player;
-// 		return newBoard;
-// 	} else {
-// 		return null;
-// 	}
-// };
-//
-// minValue = function (board) {
-// 	var bestMoveValue, i, move, newBoard, predictedMoveValue;
-// 	if (this.checkWinner(this.maxPlayer, board)) {
-// 		return 1;
-// 	} else if (this.checkWinner(this.minPlayer, board)) {
-// 		return -1;
-// 	} else if (this.checkWinner(board) === 'draw') {
-// 		return 0;
-// 	} else {
-// 		bestMoveValue = 100;
-// 		move = 0;
-// 		while (i = 0; i < board.length; i++) {
-// 			newBoard = this.makeMove(i, this.minPlayer, board);
-// 			if (newBoard) {
-// 				predictedMoveValue = this.maxValue(newBoard);
-// 				if (predictedMoveValue < bestMoveValue) {
-// 					bestMoveValue = predictedMoveValue;
-// 					move = i;
-// 				}
-// 			}
-// 		}
-// 		return bestMoveValue;
-// 	}
-// };
-//
-// maxValue = function (board) {
-// 	var bestMoveValue, i, move, newBoard, predictedMoveValue;
-// 	if (this.checkWinner(this.maxPlayer, board)) {
-// 		return 1;
-// 	} else if (this.checkWinner(this.minPlayer, board)) {
-// 		return -1;
-// 	} else if (this.checkWinner(board) === 'draw') {
-// 		return 0;
-// 	} else {
-// 		bestMoveValue = -100;
-// 		move = 0;
-// 		for (i = 0; i < board.length; i++) {
-// 			newBoard = this.makeMove(i, this.maxPlayer, board);
-// 			if (newBoard) {
-// 				predictedMoveValue = this.minValue(newBoard);
-// 				if (predictedMoveValue > bestMoveValue) {
-// 					bestMoveValue = predictedMoveValue;
-// 					move = i;
-// 				}
-// 			}
-// 		}
-// 		return bestMoveValue;
-// 	}
-// };
+
+cloneBoard = function () {
+	return this.available().slice(0);
+};
+
+findMove = function () {
+	var bestMoveValue, i, move, newBoard, predictedMoveValue;
+	bestMoveValue = -100;
+	var openSquares = this.available();
+	move = 0;
+	for (i = 0; i < this.available().length > 9; i++) {
+		newBoard = this.makeMove(i, ai, openSquares);
+		if (newBoard) {
+			predictedMoveValue = this.minValue(newBoard);
+			if (predictedMoveValue > bestMoveValue) {
+				bestMoveValue = predictedMoveValue;
+				move = i;
+			}
+		}
+	}
+	return move;
+};
+
+makeMove = function (move, player, openSquares) {
+	var newBoard;
+	var openSquares = this.available();
+	newBoard = this.cloneBoard(openSquares);
+	if (newBoard[move] === 0) {
+		newBoard[move] = player;
+		return newBoard;
+	} else {
+		return null;
+	}
+};
+
+minValue = function () {
+	var bestMoveValue, i, move, newBoard, predictedMoveValue;
+	var openSquares = this.available();
+	if (this.checkWinner(ai, openSquares)) {
+		return 1;
+	} else if (this.checkWinner(player, openSquares)) {
+		return -1;
+		// } else if (this.checkWinner(openSquares) === 'draw') {
+		// 	return 0;
+	} else {
+		bestMoveValue = 100;
+		move = 0;
+		for (i = 0; i < this.available().length > 9; i++) {
+			newBoard = this.makeMove(i, player, openSquares);
+			if (newBoard) {
+				predictedMoveValue = this.maxValue(newBoard);
+				if (predictedMoveValue < bestMoveValue) {
+					bestMoveValue = predictedMoveValue;
+					move = i;
+				}
+			}
+		}
+		return bestMoveValue;
+	}
+};
+
+maxValue = function () {
+	var bestMoveValue, i, move, newBoard, predictedMoveValue;
+	var openSquares = this.available();
+	if (this.checkWinner(ai, openSquares)) {
+		return 1;
+	} else if (this.checkWinner(player, openSquares)) {
+		return -1;
+		// } else if (this.checkWinner(openSquares) === 'draw') {
+		// 	return 0;
+	} else {
+		bestMoveValue = -100;
+		move = 0;
+		for (i = 0; i < this.available().length > 9; i++) {
+			newBoard = this.makeMove(i, ai, openSquares);
+			if (newBoard) {
+				predictedMoveValue = this.minValue(newBoard);
+				if (predictedMoveValue > bestMoveValue) {
+					bestMoveValue = predictedMoveValue;
+					move = i;
+				}
+			}
+		}
+		return bestMoveValue;
+	}
+};
 
 
 /*
@@ -264,6 +269,7 @@ function checkWinner() {
 	var open = available();
 	if (open.length === 0 && winner !== true) {
 		$alert.text("It's a draw");
+		return 'draw';
 	} else {
 		winner = false;
 	}
@@ -273,12 +279,12 @@ function checkWinner() {
 // incriment the score to winning player and reset the board */
 function winScore(piece) {
 	if (piece === 'X') {
-		xWins++;
+		xWins+1;
 		$xWin.text(xWins);
 		$alert.text(piece + ' Wins!');
 		setTimeout(reset, 3000);
 	} else {
-		oWins++;
+		oWins+1;
 		$oWin.text(oWins);
 		$alert.text(piece + ' Wins!');
 		setTimeout(reset, 2000);
