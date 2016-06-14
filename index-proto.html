@@ -32,18 +32,10 @@
                     <ul class="nav navbar-nav">
                         <!-- <li>piece:</li> -->
                         <li>
-                            <button id="X" class="btn btn-primary X-primary">X</button>
-                            <button id="O" class="btn btn-primary X-primary">O</button>
+                            <button id="X" class="btn btn-primary X-primary" onclick="tictac.setMinMaxPlayers('X');">X</button>
+                            <button id="O" class="btn btn-primary X-primary" onclick="tictac.setMinMaxPlayers('O');">O</button>
                         </li>
                     </ul>
-                    <!-- <ul class="nav navbar-nav">
-                    <li>players:</li>
-                    <li>
-                        <button id="00" class="btn btn-primary playerNumber">0</button>
-                        <button id="01" class="btn btn-primary playerNumber">1</button>
-                        <button id="02" class="btn btn-primary playerNumber">2</button>
-                    </li>
-                    </ul> -->
                 </div>
             </div>
         </div>
@@ -54,16 +46,16 @@
             <div class="cover-container">
                 <div class="inner cover">
                     <div class="masthead clearfix">
-                        <div class="inner pad-top">
+                        <div id ="tictactoe" class="inner pad-top">
                             <div class="btn-group btn-group-justified" role="group" aria-label="...">
                                 <div class="btn-group" role="group">
-                                    <button id="0" type="button" class="btn big-btn " data-toggle="button" aria-pressed="false" autocomplete="off"></button>
+                                    <button id="0" type="button" class="btn big-btn "  onclick="tictac.play(0, this.minPlayer);" data-toggle="button" aria-pressed="false" autocomplete="off"></button>
                                 </div>
                                 <div class="btn-group" role="group">
-                                    <button id="1" type="button" class="btn big-btn " data-toggle="button" aria-pressed="false" autocomplete="off"></button>
+                                    <button id="1" type="button" class="btn big-btn "  onclick="tictac.play(1, this.minPlayer);" data-toggle="button" aria-pressed="false" autocomplete="off"></button>
                                 </div>
                                 <div class="btn-group" role="group">
-                                    <button id="2" type="button" class="btn big-btn " data-toggle="button" aria-pressed="false" autocomplete="off"></button>
+                                    <button id="2" type="button" class="btn big-btn "  onclick="tictac.play(2, this.minPlayer);" data-toggle="button" aria-pressed="false" autocomplete="off"></button>
                                 </div>
                             </div>
 
