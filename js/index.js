@@ -82,7 +82,7 @@ function move() {
 	checkWinner();
 	turn++;
 	aiTurn();
-}
+};
 
 // checks rule and calls to checks for winner
 function play(id, piece) {

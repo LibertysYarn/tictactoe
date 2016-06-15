@@ -1,13 +1,21 @@
 var game;
+var ui;
 window.onload = function () {
-	this.pl = document.getElementsByName('player');
-	this.sq = document.getElementsByName('square');
-  game = new TicTacToe(pl, sq);
+	var pl = document.getElementsByName('player');
+	var sq = document.getElementsByName('square');
+	game = new Play(pl, sq);
+	ui = new Ui(pl);
 };
 
-var TicTacToe = function () {
- this.player = pl;
- this.square = sq;
+var Play = function (pl, sq) {
+	this.player = pl;
+	this.square = sq;
+};
+
+var Ui = function (pl, turn, board) {
+	this.board = [];
+	//this.player = pl;
+	this.turn = 0;
 };
 
 var MiniMax = function () {};
@@ -19,38 +27,79 @@ var $alert = $('#alert-box');
 var $clearAll = $('#clearAll');
 var $primary = $('.X-primary');
 
-TicTacToe.prototype = function () {
-	//var randomCell, player, ai, piece, minPlayer, maxPlayer;
+//clears all fields and arrays on reset button click
+//$clearAll.on('click', reset);
+
+
+Ui.prototype = function () {
+	var createBoard = function (board) {
+			this.board = Array(10).join('E').split('');
+			//return board;
+		},
+		// clears all text, values, and fields
+		reset = function () {
+			// clears all fields and arrays on reset button click
+			$bigBtn.text('');
+			$bigBtn.button('reset');
+			turn = 0;
+			this.board = [];
+			winner = false;
+			$alert.text(' ');
+		},
+		setPlayer = function (piece) {
+			player = piece;
+			// assigns other piece to the ai
+			//ai = player === 'X' ? 'O' : 'X';
+			// alerts user who goes first
+			$alert.text(player + ' goes first!');
+			ui.createBoard();
+		},
+		setPlayerTest = function() {
+			// test if piece is defined
+			if (player === undefined) {
+				$alert.text('You must choose a side');
+				setTimeout(ui.reset, 1500);
+			}
+		};
+	return {
+		createBoard: createBoard,
+		reset: reset,
+		setPlayer: setPlayer,
+		//setPlayerTest: setPlayerTest
+	};
+}();
+
+Play.prototype = function () {
+	var randomCell, player, piece;
+	var ai = player === 'X' ? 'O' : 'X';
 	var winner = false;
 	var turn = 0;
 	var xWins = 0;
 	var oWins = 0;
-	var board = [];
 
 	// create array of available spaces on the board [E...E]
-		aiTurn = function () {
+	var aiTurn = function () {
 			// make a random move
+			console.log(ai);
 			var openSquares = this.available();
-			len = openSquares.length;
-			randomCell = openSquares[Math.floor(Math.random() * len)];
-			play(randomCell, ai);
+			var len = openSquares.length;
+			var randomCell = openSquares[Math.floor(Math.random() * len)];
+			game.play(ai, randomCell);
 		},
 		available = function () {
 			var empty = [];
 			if (empty.length === 0) {
 				for (var i = 0; i < 9; i++) {
-					if (this.board[i] === 'E') {
+					if (ui.board[i] === 'E') {
 						empty.push(i);
 					}
 				}
 			}
 			return empty;
 		},
-		begin = function () {
-			turn === 0 ? this.createBoard() : 0;
-		},
 
-		checkWinner = function (player, board) {
+		checkWinner = function () {
+			var board = ui.board;
 			// check rows
 			for (var i = 0; i <= 6; i = i + 3) {
 				if (board[i] !== 'E' && board[i] === board[i + 1] && board[i] === board[i + 2]) {
@@ -86,74 +135,30 @@ TicTacToe.prototype = function () {
 				winner = false;
 			}
 		},
-
-		// create an array for the board [0...8]
-		createBoard = function () {
-			var board = Array(10).join('E').split('');
-		},
 		move = function (player, square) {
-			// test if piece is defined
-			if (player === undefined) {
-				$alert.text('You must choose a side');
-				setTimeout(reset, 1500);
+			if (0 >= ui.turn <= 8) {
+				game.play(player, square);
+				checkWinner();
+				ui.turn++;
+				game.aiTurn();
+				console.log(ui.turn);
+				console.log(ui.board);
+				console.log(game.available());
 			}
 			// print alert message
-			else if (winner === false) {
-				$alert.text('nice move ' + player);
-			}
-			// call to create the board
-			turn === 0 ? createBoard() : 0;
-
-			var $btn = $(this).button();
-			var playerId = this.id;
-			console.log(turn);
-			// $btn.text(player);
-			this.play(square, player);
-
-			checkWinner();
-			turn++;
-			this.aiTurn();
-
-			// when clicking on the board and mark with player piece
-			$bigBtn.on('click', move(player, square));
-
+			// else if (game.winner === false) {
+			// 	$alert.text('nice move ' + player);
+			// }
 		},
-
-		play = function (square, player) {
+		play = function (piece, square) {
 			// test space availability
-			if (board[id] === 'E') {
-				board[id] = player;
-				console.log(board[id]);
+			console.log(ai);
+			if (ui.board[square] === 'E') {
+				ui.board[square] = piece;
 				// assigns player piece to board index matching space location id
 				var $btn = $('#' + square).button();
-				$btn.text(player);
+				$btn.text(piece);
 			}
-
-		},
-		// clears all text, values, and fields
-		reset = function () {
-			// clears all fields and arrays on reset button click
-			$bigBtn.text('');
-			$bigBtn.button('reset');
-			turn = 0;
-			board = [];
-			winner = false;
-			$alert.text(' ');
-
-			// clears all fields and arrays on reset button click
-			$clearAll.on('click', reset);
-
-		},
-		setPlayer = function (e) {
-			game.begin();
-			player = e.innerHTML;
-			// assigns other piece to the ai
-			ai = player === 'X' ? 'O' : 'X';
-			// alerts user who goes first
-			$alert.text(player + ' goes first!');
-
-			// user to choose player piece
-			$primary.on('click', setPlayer(this.id));
 		},
 		// incriment the score to winning player and reset the board
 		winScore = function (piece) {
@@ -161,27 +166,23 @@ TicTacToe.prototype = function () {
 				xWins++;
 				$xWin.text(xWins);
 				$alert.text(piece + ' Wins!');
-				setTimeout(reset, 3000);
+				setTimeout(ui.reset, 3000);
 			} else {
 				oWins++;
 				$oWin.text(oWins);
 				$alert.text(piece + ' Wins!');
-				setTimeout(reset, 2000);
+				setTimeout(ui.reset, 3000);
 			}
 		};
 	return {
-		ai: ai,
-		// available: available,
-		// begin: begin,
-		// checkWinner: checkWinner,
-		// createBoard: createBoard,
+		aiTurn: aiTurn,
+		available: available,
+		checkWinner: checkWinner,
 		move: move,
 		play: play,
-		reset: reset,
-		setPlayer: setPlayer,
-		// winScore: winScore
+		winScore: winScore
 	};
-};
+}();
 
 MiniMax.prototype = function () {
 	var minPlayer, maxPlayer, board;
@@ -268,8 +269,8 @@ MiniMax.prototype = function () {
 			}
 		},
 		setMinMaxPlayers = function () {
-			minPlayer = tictac.setPlayer;
-			maxPlayer = minPlayer === 'X' ? 'O' : 'X';;
+			minPlayer = ui.setPlayer;
+			maxPlayer = minPlayer === 'X' ? 'O' : 'X';
 		};
 
 	return {
